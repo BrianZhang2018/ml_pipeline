@@ -22,7 +22,7 @@ This repository contains a modular, production-ready implementation of an LLM-ba
 
 ## Phases
 
-See our detailed [Project Phase Structure](docs/project_phases.md) document for the complete breakdown of phases and objectives.
+See our detailed [Project Phase Structure](docs/reference/project_phases.md) document for the complete breakdown of phases and objectives.
 
 ### Phase 1: Project Setup and Configuration
 1. Create project directory structure ✅ Completed
@@ -49,10 +49,13 @@ See our detailed [Project Phase Structure](docs/project_phases.md) document for 
 4. Create visualization tools for model analysis ✅ Completed
 
 ### Phase 5: Deployment and Testing
-1. Build FastAPI endpoint for model serving
-2. Create Dockerfile for containerization
-3. Write unit tests for all modules
-4. Create integration tests for the complete pipeline
+1. Build FastAPI endpoint for model serving ✅ Completed
+2. Create Dockerfile for containerization ✅ Completed
+3. Write unit tests for all modules ✅ Completed
+4. Create integration tests for the complete pipeline ✅ Completed
+5. Successfully deploy Docker container ✅ Completed
+6. Verify basic API functionality ✅ Completed
+7. Identify model loading network issues ⚠️ In Progress
 
 ### Phase 6: Documentation and Finalization
 1. Create comprehensive README with project overview
@@ -75,6 +78,7 @@ See our detailed [Project Phase Structure](docs/project_phases.md) document for 
 
 ### Prerequisites
 - Python 3.8 or higher
+- Docker (for containerized deployment)
 
 ### Installation
 ```bash
@@ -97,9 +101,31 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+### Running the API with Docker
+```bash
+# Build the Docker image
+docker build -t ml-pipeline-api .
+
+# Run the container
+docker run -p 8000:8000 ml-pipeline-api
+
+# The API will be available at http://localhost:8000
+```
+
+### API Endpoints
+Once the Docker container is running, you can access the following endpoints:
+
+- `GET /` - Root endpoint with API information
+- `GET /api/v1/health` - Health check endpoint
+- `GET /api/v1/models/{model_name}` - Get information about a specific model
+- `POST /api/v1/classify` - Classify text using a pre-trained model
+- `POST /api/v1/classify/batch` - Classify multiple texts in batch
+
+For detailed API documentation, visit `http://localhost:8000/docs` when the container is running.
+
 ## Project Structure
 
-See our detailed [File Structure](docs/file_structure.md) document for the complete breakdown of directories and files.
+See our detailed [File Structure](docs/reference/file_structure.md) document for the complete breakdown of directories and files.
 
 ```
 ml_pipeline/
@@ -115,8 +141,8 @@ ml_pipeline/
 │   ├── features/     # Code for preparing data for AI
 │   ├── models/       # Code for building AI models
 │   ├── evaluation/   # Code for evaluating and interpreting models
-│   ├── utils/        # Helper code
-│   └── api/          # Code for making our system available online
+│   ├── api/          # Code for making our system available online
+│   └── utils/        # Helper code
 ├── tests/            # Code to check our system works correctly
 ├── notebooks/        # Interactive experiments
 ├── configs/          # System settings
@@ -134,11 +160,25 @@ Phase documentation can be found in the `docs/` directory:
 - [Documentation README](docs/README.md) - Main documentation index
 - [Setup Documentation](docs/setup/) - Project setup and configuration
 - [Reference Materials](docs/reference/) - General reference materials
+- [Clean Documentation Structure](docs/clean/) - Organized documentation
 
 See specific documentation files:
 - [Project Phase Structure](docs/reference/project_phases.md)
 - [Progress Overview](docs/reference/progress_overview.md)
 - [Glossary](docs/reference/glossary.md)
+- [Phase 5 Summary](docs/setup/phase5_summary.md)
+- [Phase 6 Implementation Plan](docs/setup/phase6_implementation_plan.md)
+- [Project Status Summary](docs/setup/project_status_summary.md)
+
+## Current Status
+
+✅ **All phases implemented**
+✅ **Docker container running**
+✅ **Basic API endpoints working**
+⚠️ **Model loading experiencing network issues**
+🚧 **Phase 6 documentation in progress**
+
+For a detailed current status, see our [Project Status Summary](docs/setup/project_status_summary.md).
 
 ## Glossary
 
