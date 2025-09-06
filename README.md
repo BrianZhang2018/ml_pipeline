@@ -43,10 +43,10 @@ See our detailed [Project Phase Structure](docs/project_phases.md) document for 
 4. Implement hyperparameter tuning with Optuna ✅ Completed
 
 ### Phase 4: Model Evaluation and Interpretability
-1. Create model evaluation module with multiple metrics
-2. Implement cross-validation for robust evaluation
-3. Add model interpretability using SHAP or LIME
-4. Create visualization tools for model analysis
+1. Create model evaluation module with multiple metrics ✅ Completed
+2. Implement cross-validation for robust evaluation ✅ Completed
+3. Add model interpretability using SHAP or LIME ✅ Completed
+4. Create visualization tools for model analysis ✅ Completed
 
 ### Phase 5: Deployment and Testing
 1. Build FastAPI endpoint for model serving
@@ -114,6 +114,7 @@ ml_pipeline/
 │   ├── data/         # Code for handling data
 │   ├── features/     # Code for preparing data for AI
 │   ├── models/       # Code for building AI models
+│   ├── evaluation/   # Code for evaluating and interpreting models
 │   ├── utils/        # Helper code
 │   └── api/          # Code for making our system available online
 ├── tests/            # Code to check our system works correctly
