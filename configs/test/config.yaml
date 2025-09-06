@@ -1,0 +1,22 @@
+# Testing Environment Configuration
+
+# Data settings
+DATA_DIR: "data/raw"
+PROCESSED_DATA_DIR: "data/processed"
+DATASET_NAME: "imdb_reviews"
+
+# Model settings
+MODEL_NAME: "distilbert-base-uncased"
+MAX_SEQ_LENGTH: 512
+BATCH_SIZE: 8
+EPOCHS: 1
+LEARNING_RATE: 2e-5
+
+# Training settings
+SAVE_CHECKPOINTS: false
+CHECKPOINT_DIR: "models/checkpoints"
+LOG_DIR: "logs"
+
+# Experiment tracking
+MLFLOW_TRACKING_URI: "file:./mlruns"
+EXPERIMENT_NAME: "text_classification_test"
