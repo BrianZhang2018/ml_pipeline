@@ -29,58 +29,81 @@ logger = get_logger("model_loader")
 _model_cache: Dict[str, Dict[str, Any]] = {}
 
 
-def load_model(model_name: str, max_length: int = 512) -> Dict[str, Any]:
+def load_model(model_name: str, max_length: int = 512, try_local_first: bool = True) -> Dict[str, Any]:
     """
     Load a pre-trained model and tokenizer.
     
-    This function loads a model and tokenizer from the Hugging Face model hub
-    and caches them for future use.
+    This function loads a model and tokenizer, trying local cache first to avoid
+    network dependencies, with fallback to online download if needed.
     
     Args:
         model_name (str): Name of the model to load
         max_length (int): Maximum sequence length for the tokenizer
+        try_local_first (bool): Whether to try loading from local cache first
         
     Returns:
         Dict[str, Any]: Dictionary containing the model, tokenizer, and metadata
     """
     cache_key = f"{model_name}_{max_length}"
     
-    # Check if model is already cached
+    # Check if model is already cached in memory
     if cache_key in _model_cache:
-        logger.info(f"Model '{model_name}' found in cache")
+        logger.info(f"Model '{model_name}' found in memory cache")
         return _model_cache[cache_key]
     
     logger.info(f"Loading model '{model_name}' with max_length={max_length}")
     
-    try:
-        # Load model and tokenizer
-        model = AutoModelForSequenceClassification.from_pretrained(model_name)
-        tokenizer = AutoTokenizer.from_pretrained(model_name)
-        
-        # Set max length
-        tokenizer.model_max_length = max_length
-        
-        # Get model information
-        num_labels = model.config.num_labels
-        model_type = model.config.model_type
-        
-        # Store in cache
-        _model_cache[cache_key] = {
-            "model": model,
-            "tokenizer": tokenizer,
-            "model_name": model_name,
-            "model_type": model_type,
-            "num_labels": num_labels,
-            "max_length": max_length,
-            "loaded": True
-        }
-        
-        logger.info(f"Model '{model_name}' loaded successfully")
-        return _model_cache[cache_key]
-        
-    except Exception as e:
-        logger.error(f"Failed to load model '{model_name}': {str(e)}")
-        raise
+    model = None
+    tokenizer = None
+    
+    # Try loading from local cache first (offline-first approach)
+    if try_local_first:
+        try:
+            logger.info(f"Attempting to load '{model_name}' from local cache (offline mode)")
+            model = AutoModelForSequenceClassification.from_pretrained(
+                model_name,
+                local_files_only=True  # Force offline mode
+            )
+            tokenizer = AutoTokenizer.from_pretrained(
+                model_name,
+                local_files_only=True  # Force offline mode
+            )
+            logger.info(f"Successfully loaded '{model_name}' from local cache")
+        except Exception as local_error:
+            logger.warning(f"Failed to load '{model_name}' from local cache: {str(local_error)}")
+            logger.info(f"Falling back to online download for '{model_name}'")
+    
+    # Fallback to online download if local loading failed or was skipped
+    if model is None or tokenizer is None:
+        try:
+            logger.info(f"Downloading '{model_name}' from Hugging Face Hub")
+            model = AutoModelForSequenceClassification.from_pretrained(model_name)
+            tokenizer = AutoTokenizer.from_pretrained(model_name)
+            logger.info(f"Successfully downloaded '{model_name}' from online")
+        except Exception as online_error:
+            logger.error(f"Failed to load model '{model_name}' both locally and online: {str(online_error)}")
+            raise
+    
+    # Set max length
+    tokenizer.model_max_length = max_length
+    
+    # Get model information
+    num_labels = model.config.num_labels
+    model_type = model.config.model_type
+    
+    # Store in memory cache
+    _model_cache[cache_key] = {
+        "model": model,
+        "tokenizer": tokenizer,
+        "model_name": model_name,
+        "model_type": model_type,
+        "num_labels": num_labels,
+        "max_length": max_length,
+        "loaded": True
+    }
+    
+    logger.info(f"Model '{model_name}' cached successfully")
+    return _model_cache[cache_key]
 
 
 def get_model_info(model_name: str, max_length: int = 512) -> Dict[str, Any]:

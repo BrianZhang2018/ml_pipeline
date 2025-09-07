@@ -73,6 +73,7 @@ class ModelTrainer:
         num_train_epochs: int = 3,
         per_device_train_batch_size: int = 16,
         per_device_eval_batch_size: int = 16,
+        learning_rate: float = 5e-5,
         warmup_steps: int = 500,
         weight_decay: float = 0.01,
         logging_dir: str = "./logs",
@@ -93,6 +94,7 @@ class ModelTrainer:
             num_train_epochs (int): Number of training epochs
             per_device_train_batch_size (int): Batch size for training
             per_device_eval_batch_size (int): Batch size for evaluation
+            learning_rate (float): Learning rate for optimization
             warmup_steps (int): Number of warmup steps
             weight_decay (float): Weight decay for optimization
             logging_dir (str): Directory for logging
@@ -114,6 +116,7 @@ class ModelTrainer:
             num_train_epochs=num_train_epochs,
             per_device_train_batch_size=per_device_train_batch_size,
             per_device_eval_batch_size=per_device_eval_batch_size,
+            learning_rate=learning_rate,
             warmup_steps=warmup_steps,
             weight_decay=weight_decay,
             logging_dir=logging_dir,

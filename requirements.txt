@@ -3,6 +3,7 @@ tensorflow>=2.10.0
 torch>=1.12.0
 transformers>=4.20.0
 datasets>=2.0.0
+accelerate>=0.26.0
 
 # Experiment tracking
 mlflow>=1.28.0

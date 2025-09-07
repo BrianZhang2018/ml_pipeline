@@ -23,6 +23,21 @@ COPY requirements.txt .
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Set Hugging Face cache directory
+ENV TRANSFORMERS_CACHE=/app/.cache/huggingface
+ENV HF_HOME=/app/.cache/huggingface
+
+# Pre-download commonly used models to avoid runtime network dependencies
+RUN python -c "from transformers import AutoModel, AutoTokenizer, AutoModelForSequenceClassification; \
+    print('Downloading distilbert-base-uncased...'); \
+    AutoModelForSequenceClassification.from_pretrained('distilbert-base-uncased', cache_dir='/app/.cache/huggingface'); \
+    AutoTokenizer.from_pretrained('distilbert-base-uncased', cache_dir='/app/.cache/huggingface'); \
+    print('distilbert-base-uncased downloaded successfully'); \
+    print('Downloading bert-base-uncased...'); \
+    AutoModelForSequenceClassification.from_pretrained('bert-base-uncased', cache_dir='/app/.cache/huggingface'); \
+    AutoTokenizer.from_pretrained('bert-base-uncased', cache_dir='/app/.cache/huggingface'); \
+    print('bert-base-uncased downloaded successfully')"
+
 # Copy application code
 COPY . .
 

@@ -5,9 +5,6 @@ This project demonstrates a complete machine learning pipeline for text classifi
 ## What Are We Building? (Explain Like I'm 5)
 We're building a smart computer program that can read text (like movie reviews or news articles) and figure out what category they belong to. Think of it like teaching a computer to sort your mail into different boxes based on what's written on the envelope.
 
-## Why Is This Important?
-Companies like Adobe use these kinds of systems to help users find what they're looking for, organize content, and understand what people are saying about their products.
-
 ## Project Overview
 
 This repository contains a modular, production-ready implementation of an LLM-based text classification system. The project showcases key machine learning engineering skills including:
@@ -112,7 +109,40 @@ docker run -p 8000:8000 ml-pipeline-api
 # The API will be available at http://localhost:8000
 ```
 
-### API Endpoints
+### Model Training
+
+Our pipeline supports both quick validation and full production training:
+
+### Quick Training Demo (Recommended First)
+```bash
+# Fast pipeline validation with synthetic data (~4 minutes)
+docker run -it --rm -v $(pwd):/workspace ml_pipeline \
+    bash -c "cd /workspace && python quick_train_demo.py"
+```
+
+### Full Model Training
+```bash
+# Test run with limited samples
+docker run -it --rm -v $(pwd):/workspace ml_pipeline \
+    bash -c "cd /workspace && python train_model.py --test_run"
+
+# Full production training
+docker run -it --rm -v $(pwd):/workspace ml_pipeline \
+    bash -c "cd /workspace && python train_model.py --epochs 3 --batch_size 16"
+```
+
+### Training Documentation
+- [📚 Training Process Guide](docs/training_process_guide.md) - Complete training workflow with diagrams
+- [🏗️ Training Architecture Diagrams](docs/training_architecture_diagrams.md) - Detailed system architecture
+- [🔄 Model Comparison Guide](compare_models.py) - Compare trained vs pre-trained models
+
+**Key Benefits:**
+- ✅ **Improved Confidence**: Training increases prediction confidence from ~0.53 to ~0.85+
+- ✅ **Domain-Specific**: Models learn movie review patterns for better sentiment analysis
+- ✅ **Offline-First**: Pre-downloaded models eliminate network dependencies
+- ✅ **Fast Validation**: Quick demo completes in ~4 minutes
+
+## API Usage
 Once the Docker container is running, you can access the following endpoints:
 
 - `GET /` - Root endpoint with API information
